@@ -1,0 +1,97 @@
+README for LuaCASC 1.4
+
+* Description
+  -----------
+  LuaCASC is an implementation of the CASC file system in Lua, which supports
+  reading from local installations and/or CDN-hosted data.
+  
+
+* Installation
+  ------------
+  LuaCASC is implemented in Lua; you can install it by moving the casc/
+  directory into a path searched by Lua's package loader (check package.path).
+  
+  The included casc/bin.c file can optionally be compiled as a shared library
+  (as casc/binc.{so,dll}), placed into a path searched via package.cpath.
+  
+  The following Lua modules may be required on some systems, and generally
+  offer improved performance over the implementations used if they are not
+  available:
+  
+  * lzlib; https://github.com/LuaDist/lzlib
+  * Lua BitOp (only for Lua 5.1); http://bitop.luajit.org/
+  * LuaSocket OR LuaCURL:
+    * http://w3.impa.br/~diego/software/luasocket/
+    * http://luacurl.luaforge.net/
+  * LuaFileSystem; http://keplerproject.github.io/luafilesystem/
+  * MD5; http://keplerproject.org/md5/
+  
+* Resources
+  ---------
+  Some usage examples are included in the examples/ directory.
+  
+  Detailed documentation is available at http://www.townlong-yak.com/casc/
+  
+* Version history
+  ---------------
+
+  * Version 1.4 [2015-04-16]
+    ------------------------
+
+    * Added conf.mergeInstall configuration key, allowing files installed
+      outside the CASC store on the specified platforms to be retrieved from
+      the CDN using handle:readFile("path") and related methods.
+    * Added casc.conf("path" or "url"[, conf]) function, taking the same
+      arguments as casc.open, and returning the resulting configuration table,
+      without creating a CASC handle.
+    * Added an optional cache argument to handle:readFile() and related
+      functions, allowing the retrieved file to be cached to disk if conf.cache
+      was specified when creating the CASC handle. If not explicitly provided,
+      it defaults to the value of conf.cacheFiles.
+    * Added handle:getFileContentHash("path"[, lang]) method returning a file's
+      content hash matching the specified locale without retrieving the file.
+    * Added handle:getFileVariants("path") method returning a table mapping
+      content hashes of the available variants of the specified file to an
+      array of locale identifiers for which this file variant is used.
+    * Encoding/install files can now be patched instead of being re-downloaded
+      when a local/cached old version is available. To disable this, set
+      conf.usePatchEntries to false when creating a CASC handle.
+    * Setting conf.requireRootFile to false allows a CASC handle to be created
+      even when the root file could not be parsed. When in this happens, handle
+      methods that accept file path arguments will not be able to locate files
+      within the CASC store.
+    * If LuaSocket is not available, LuaCURL may now be used for CDN requests.
+    * Removed casc.selectUserBuild function.
+    * Fixed an issue preventing files whose encoding hashes are not explicitly
+      listed in CDN indices from being retrieved from the CDN.
+    * Encoding table chunks are now parsed on-demand.
+    * CDN indices are now loaded and parsed on-demand.
+  
+  * Version 1.3.1 [2014-11-03]
+    --------------------------
+    * Lua 5.2 compatibility: bit32 standard library and os.execute return
+      values change.
+    * Bug fixes.
+  
+  * Version 1.3 [2014-10-29]
+    ------------------------
+    * Added support for verifying content/encoding MD5 hashes.
+    * Improved error handling in most CASC functions to return nil and an error
+      message when an unexpected error occurs while performing the requested
+      operation.
+    * Added automatic guessing of field types and table output to DBC signature
+      strings.
+  
+  * Version 1.2 [2014-10-12]
+    ------------------------
+    * Added support for specifying which version of a multi-locale file to
+      extract.
+    * Added DB2 support to the DBC module.
+  
+  * Version 1.1 [2014-10-12]
+    ------------------------
+    * Added support for downloading content directly from a CDN, in addition to
+      loading from a local installation.
+    * Added float32 field type to the DBC module.
+
+(end of README)
