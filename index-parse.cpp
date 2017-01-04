@@ -77,7 +77,11 @@ int main (int argc, char** argv)
             fseek (b, entry.offset, SEEK_SET);
             std::vector<char> data (entry.size);
             fread (data.data(), entry.size, 1, b);
+#ifdef JUST_EXTRACT_BLOBS
+            auto& out = data;
+#else
             std::vector<char> out (decode_blte (data));
+#endif
 
             FILE* o (fopen (entry.hash_as_str().c_str(), "wb"));
             fwrite (out.data(), out.size(), 1, o);
