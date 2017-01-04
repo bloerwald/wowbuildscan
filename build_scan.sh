@@ -119,7 +119,7 @@ do
       if ! $silent
       then
         set +e
-        curl -s "https://api.telegram.org/${telegram_bot}/sendMessage" \
+        curl -s "https://api.telegram.org/${telegram_api}/sendMessage" \
              --data "chat_id=${telegram_chat}" \
              --data text="🍾 $(echo ${build} | sed -e 's, .*,,')" >/dev/null || echo "telegram failed"
         echo -e "PASS ${irc_account_PASS}\nNICK ${irc_nick}\nUSER ${irc_USER}\nPRIVMSG ${irc_channel} :buildscan: ${build}\nQUIT\n" | nc ${irc_host} ${irc_port} >/dev/null || echo "irc failed"
@@ -151,7 +151,7 @@ do
 
       if ! $silent
       then
-        curl -s "https://api.telegram.org/${telegram_bot}/sendMessage" \
+        curl -s "https://api.telegram.org/${telegram_api}/sendMessage" \
              --data "chat_id=${telegram_chat}" \
              --data text="🍾 ARCHIVE ${archive}: $(echo; sed -e 's,^ *,,' -e 's,\([0-9]\) ,\1× ,' "${cache_dir}/build_scan.tmp")" >/dev/null || echo "telegram failed"
         if grep -q VERSION "${cache_dir}/build_scan.tmp"
