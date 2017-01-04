@@ -4,7 +4,7 @@ set -euo pipefail
 silent=${silent:-false}
 
 # notification service config, directories, ...
-source "config.inc"
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/config.inc"
 
 cd "${build_scan_dir}"
 export LUA_PATH="./?.lua;${lua_casc_dir}/?.lua;${lua_casc_dir}/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua"
