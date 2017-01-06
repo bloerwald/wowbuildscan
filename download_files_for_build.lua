@@ -1,8 +1,6 @@
-local cache_dir, program, build_name, build_hash, root_hash = ...
+local output_dir, cache_dir, program, build_name, build_hash, root_hash = ...
 
 print ("program=" .. program .. " build_name=" .. build_name .. " build_hash=" .. build_hash .. " root_hash=" .. (root_hash or "none"))
-
-local output_dir = "${output_dir}"
 
 if program == "wowt" or program == "wow_beta" or program == "wow" then
 

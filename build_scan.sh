@@ -126,7 +126,7 @@ do
         set -e
       fi
 
-      lua "${build_scan_dir}/download_files_for_build.lua" "${cache_dir}" "${program}" ${build} \
+      lua "${build_scan_dir}/download_files_for_build.lua" "${output_dir}" "${cache_dir}" "${program}" ${build} \
         | if ! $silent
           then
             mail -s "BUILD ${build}" "${mail_receiver}"
