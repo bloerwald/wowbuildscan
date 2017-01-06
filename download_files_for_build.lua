@@ -20,6 +20,18 @@ local files = { {suffix = "OSX-64", full = "World of Warcraft.app/Contents/MacOS
               , {suffix = "OSX-Retail-64", full = "World of Warcraft Retail.app/Contents/MacOS/World of Warcraft"}
               , {suffix = "OSX-Test-64", full = "World of Warcraft Test.app/Contents/MacOS/World of Warcraft"}
               , {suffix = "OSX-Test-Retail-64", full = "World of Warcraft Test Retail.app/Contents/MacOS/World of Warcraft"}
+              , {suffix = "OSX-64", full = "World of Warcraft-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Beta-64", full = "World of Warcraft Beta-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Debug-64", full = "World of Warcraft Debug-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-GM-64", full = "World of Warcraft GM-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Game-Master-64", full = "World of Warcraft Game Master-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-GameMaster-64", full = "World of Warcraft GameMaster-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Internal-64", full = "World of Warcraft Internal-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Retail-64", full = "World of Warcraft Retail-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Test-64", full = "World of Warcraft Test-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-Test-Retail-64", full = "World of Warcraft Test Retail-64.app/Contents/MacOS/World of Warcraft-64"}
+              , {suffix = "OSX-GLReplayer", full = "World of Warcraft Internal.app/Contents/Helpers/GLReplayer.app/Contents/MacOS/GLReplayer"}
+              , {suffix = "OSX-GLReplayer-64", full = "World of Warcraft Internal-64.app/Contents/Helpers/GLReplayer.app/Contents/MacOS/GLReplayer"}
               , {suffix = "WIN-64.exe", full = "Wow-64.exe",}
               , {suffix = "WIN-64.pdb", full = "Wow-64.pdb",}
               , {suffix = "WIN-Beta-64.exe", full = "WowB-64.exe",}
