@@ -20,6 +20,8 @@ function hash_url() { base=${1}; shift; type=${1}; shift; hash=${1}
   echo "${base}/${type}/${hash:0:2}/${hash:2:2}/${hash}"
 }
 
+touch .crawled_build_hashes
+touch .crawled_archive_hashes
 mkdir -p "${cache_dir}"
 
 for program in ${programs[@]}
