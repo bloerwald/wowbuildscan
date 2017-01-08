@@ -10,7 +10,6 @@ cd "${build_scan_dir}"
 export LUA_PATH="./?.lua;${lua_casc_dir}/?.lua;${lua_casc_dir}/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua"
 
 programs=(wow_beta wow wowt herot d3 d3cn d3t hero prot prodev)
-cdn="http://blzddist1-a.akamaihd.net/tpr/wow" # http://blzddist2-a.akamaihd.net/tpr/wow
 
 function hash_url() { base=${1}; shift; type=${1}; shift; hash=${1}
   echo "${base}/${type}/${hash:0:2}/${hash:2:2}/${hash}"
@@ -22,6 +21,8 @@ mkdir -p "${cache_dir}"
 
 for program in ${programs[@]}
 do
+  cdn=$(curl -s http://{eu,us,public-test,beta,xx,cn}.patch.battle.net:1119/${program}/cdns | grep ^eu | head -n1 | sed -e "s,eu|\([a-zA-Z0-9/-]*\)|\([a-zA-Z0-9\.-]*\) .*,\2/\1,")
+
   # "http://${portal}.patch.battle.net:1119/${program}"                    }
   curl --connect-timeout 3 -s http://{eu,us,public-test,beta,xx,cn}.patch.battle.net:1119/${program}/versions \
     | grep -v '^Region!' \
@@ -29,19 +30,19 @@ do
     | sort -u \
     | while read buildconfig cdnconfig version
       do
-        echo BUILD ${buildconfig} ${version} ${program}
+        echo BUILD ${buildconfig} ${version} ${program} ${cdn}
         for build in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^builds | sed -e 's,^builds = ,,')
         do
-          echo BUILD ${build} ${version} ${program}
+          echo BUILD ${build} ${version} ${program} ${cdn}
         done
         for archive in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^archives | sed -e 's,^archives = ,,')
         do
-          echo ARCHIVE ${archive} --no-- ${program}
+          echo ARCHIVE ${archive} --no-- ${program} ${cdn}
         done
       done
 done | \
 sort -u | \
-while read type build version program
+while read type build version program cdn
 do
   if [[ $type == BUILD ]]
   then
@@ -73,18 +74,18 @@ do
     set -e
     if [[ ! -z ${build_name} && ! -z ${build_key} ]]
     then
-      echo "BUILD ${program} ${build_name} ${build_key} ${root_key}"
+      echo "BUILD ${program} ${cdn} ${build_name} ${build_key} ${root_key}"
     else
       echo "failed reading from config! ${build_name} ${build_key} ${root_key}" >&2
     fi
   elif [[ $type == ARCHIVE ]]
   then
-    echo "ARCHIVE ${program} ${build}"
+    echo "ARCHIVE ${program} ${cdn} ${build}"
   fi
 done | \
   sort -u | \
   shuf | \
-while read type program a1 a2 a3
+while read type program cdn a1 a2 a3
 do
 #  echo $program $type $a1 $a2 $a3 >&2
   if [[ $type == BUILD ]]
