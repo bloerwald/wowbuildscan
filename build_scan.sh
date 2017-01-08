@@ -10,12 +10,8 @@ cd "${build_scan_dir}"
 export LUA_PATH="./?.lua;${lua_casc_dir}/?.lua;${lua_casc_dir}/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua"
 
 programs=(wow_beta wow wowt herot d3 d3cn d3t hero prot prodev)
-portals=(eu us public-test beta xx cn)
 cdn="http://blzddist1-a.akamaihd.net/tpr/wow" # http://blzddist2-a.akamaihd.net/tpr/wow
 
-function portal_url() { portal=${1}; shift; program=${1}
-  echo "http://${portal}.patch.battle.net:1119/${program}"
-                      }
 function hash_url() { base=${1}; shift; type=${1}; shift; hash=${1}
   echo "${base}/${type}/${hash:0:2}/${hash:2:2}/${hash}"
 }
@@ -26,43 +22,23 @@ mkdir -p "${cache_dir}"
 
 for program in ${programs[@]}
 do
-  for portal in ${portals[@]}
-  do
-    is_first=true
-    (timeout 3 curl -s $(portal_url ${portal} ${program})/versions || true) | \
-      while read line
+  # "http://${portal}.patch.battle.net:1119/${program}"                    }
+  curl --connect-timeout 3 -s http://{eu,us,public-test,beta,xx,cn}.patch.battle.net:1119/${program}/versions \
+    | grep -v '^Region!' \
+    | sed -e "s,^[a-z]*|\([0-9a-f]*\)|\([0-9a-f]*\)|[|0-9a-f]*[0-9]*|\([0-9\.]*\)|[0-9a-f]*$,\1 \2 \3," \
+    | sort -u \
+    | while read buildconfig cdnconfig version
       do
-#        echo $line >&2
-        if $is_first
-        then
-          if [[ $line != "Region!STRING:0|BuildConfig!HEX:16|CDNConfig!HEX:16|BuildId!DEC:4|VersionsName!String:0"
-             && $line != "Region!STRING:0|BuildConfig!HEX:16|CDNConfig!HEX:16|Keyring!HEX:16|BuildId!DEC:4|VersionsName!String:0|ProductConfig!HEX:16"
-             && $line != "Region!STRING:0|BuildConfig!HEX:16|CDNConfig!HEX:16|KeyRing!HEX:16|BuildId!DEC:4|VersionsName!String:0|ProductConfig!HEX:16"
-             ]]
-          then
-            echo "BAD HEADER: $line" >&2
-            exit 1
-          else
-            is_first=false
-          fi
-        else
-          echo $line | sed -e "s,[a-z]*|\([0-9a-f]*\)|\([0-9a-f]*\)|*[0-9]*|\([0-9\.]*\).*,\1 \2 \3 ${program},"
-        fi
+        echo BUILD ${buildconfig} ${version} ${program}
+        for build in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^builds | sed -e 's,^builds = ,,')
+        do
+          echo BUILD ${build} ${version} ${program}
+        done
+        for archive in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^archives | sed -e 's,^archives = ,,')
+        do
+          echo ARCHIVE ${archive} --no-- ${program}
+        done
       done
-  done
-done | \
-sort -u | \
-while read buildconfig cdnconfig version program
-do
-  echo BUILD ${buildconfig} ${version} ${program}
-  for build in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^builds | sed -e 's,^builds = ,,')
-  do
-    echo BUILD ${build} ${version} ${program}
-  done
-  for archive in $(timeout 3 curl -s "$(hash_url ${cdn} config ${cdnconfig})" | grep ^archives | sed -e 's,^archives = ,,')
-  do
-    echo ARCHIVE ${archive} --no-- ${program}
-  done
 done | \
 sort -u | \
 while read type build version program
