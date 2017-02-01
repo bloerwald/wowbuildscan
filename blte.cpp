@@ -63,7 +63,7 @@ std::vector<char> decode_blte (char const* ptr, size_t size)
   }
   else
   {
-    chunks.emplace_back (size - sizeof (BLTE_Header), 0);
+    chunks.emplace_back (size - sizeof (BLTE_Header), 1 << 29);
   }
 
   for (auto& chunk : chunks)
@@ -86,23 +86,37 @@ std::vector<char> decode_blte (char const* ptr, size_t size)
         strm.zalloc = Z_NULL;
         strm.zfree = Z_NULL;
         strm.opaque = Z_NULL;
-        strm.avail_in = chunk.compressed - 1;
-        strm.next_in = const_cast<Bytef*> (reinterpret_cast<unsigned char const*> (ptr + 1));
         if (inflateInit(&strm) != Z_OK)
         {
           throw std::runtime_error ("bad zlib init");
         }
 
         std::vector<unsigned char> out (chunk.uncompressed);
+        strm.avail_in = chunk.compressed - 1;
+        strm.next_in = const_cast<Bytef*> (reinterpret_cast<unsigned char const*> (ptr + 1));
         strm.avail_out = out.size();
         strm.next_out = out.data();
         int i;
-        if ((i = inflate(&strm, Z_NO_FLUSH)) != Z_STREAM_END)
+        while ((i = inflate(&strm, Z_NO_FLUSH)) != Z_STREAM_END)
         {
-          throw std::runtime_error ("bad inflate " + std::to_string (i));
+          if (i != Z_BUF_ERROR || out.size() >= (1 << 30)) // unlikely to have one block of a gigabyte..
+          {
+            throw std::runtime_error ("bad inflate " + std::to_string (i));
+          }
+
+          out.resize (out.size() * 2);
+          strm.avail_in = chunk.compressed - 1;
+          strm.next_in = const_cast<Bytef*> (reinterpret_cast<unsigned char const*> (ptr + 1));
+          strm.avail_out = out.size();
+          strm.next_out = out.data();
         }
 
-        inflateEnd(&strm);
+        out.resize (out.size() - strm.avail_out);
+
+        if (inflateEnd(&strm) != Z_OK)
+        {
+          throw std::runtime_error ("bad zlib end");
+        }
 
         output.insert (output.end(), out.begin(), out.end());
       }
