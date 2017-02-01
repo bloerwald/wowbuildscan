@@ -18,6 +18,9 @@
 0 string SYHP\2\0\0\0 .phys
 !:mime wow/m2/phys
 
+0 string RVBM\4\0\0\0\0\0\0\0BBBM Model.blob
+!:mime wow/modelblob
+
 # TEX
 0 string RVXT WoW Blob Textures
 !:mime wow/tex
@@ -37,6 +40,15 @@
 
 0 string WDB5 WoW Database v5
 !:mime wow/wdb5
+
+0 string WDB6 WoW Database v6
+!:mime wow/wdb6
+
+0 string WDB7 WoW Database v7
+!:mime wow/wdb7
+
+0 string WDB8 WoW Database v8
+!:mime wow/wdb8
 
 # ADT
 0 string REVM\4\0\0\0\x12\0\0\0RDHM .adt
@@ -97,6 +109,10 @@
 # mp3
 0 string ID3\3\0 .mp3
 !:mime audio/mpeg
+
+# ogg
+0 string OggS .ogg
+!:mime audio/ogg
 
 # plist
 0 string bplist .plist
