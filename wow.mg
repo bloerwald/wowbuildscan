@@ -21,6 +21,13 @@
 0 string RVBM\4\0\0\0\0\0\0\0BBBM Model.blob
 !:mime wow/modelblob
 
+0 string \0\0\0\0\x22\0\0\0\x43\0\0\0\x64\0\0\0 .anim
+!:mime wow/m2/anim
+0 string \0\0\0\0\x21\0\0\0\x42\0\0\0\x64\0\0\0 .anim
+!:mime wow/m2/anim
+0 string \0\0\0\0\x21\0\0\0\x43\0\0\0\x64\0\0\0 .anim
+!:mime wow/m2/anim
+
 # TEX
 0 string RVXT WoW Blob Textures
 !:mime wow/tex
@@ -72,6 +79,9 @@
 0 string REVM\4\0\0\0\x12\0\0\0DDLM _lod_doodaddefs.adt
 !:mime wow/adt/lod-doodaddefs
 
+0 string REVM\4\0\0\0\x17\0\0\0RDHA .adt.dat
+!:mime wow/adt/dat
+
 # WMO
 0 string REVM\4\0\0\0\x11\0\0\0DHOM .wmo
 !:mime wow/wmo/root
@@ -109,6 +119,8 @@
 # mp3
 0 string ID3\3\0 .mp3
 !:mime audio/mpeg
+0 string ID3\2\0 .mp3
+!:mime audio/mpeg
 
 # ogg
 0 string OggS .ogg
@@ -117,3 +129,7 @@
 # plist
 0 string bplist .plist
 !:mime text/plist
+
+# sig
+16 string NGIS .sig
+!:mime wow/sign
