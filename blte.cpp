@@ -63,7 +63,7 @@ std::vector<char> decode_blte (char const* ptr, size_t size)
   }
   else
   {
-    chunks.emplace_back (size - sizeof (BLTE_Header), 1 << 29);
+    chunks.emplace_back (size - sizeof (BLTE_Header), 1 << 31);
   }
 
   for (auto& chunk : chunks)
