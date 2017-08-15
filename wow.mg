@@ -121,6 +121,17 @@
 !:mime audio/mpeg
 0 string ID3\2\0 .mp3
 !:mime audio/mpeg
+# this is one of the worst patterns possible: 1111 1111 1111 101 is
+# guaranteed, the following 1 is already not, but most of the time
+# there, and then the bitrate follows in the next nibble. there is
+# nothing actually being specific to this file format and guessing
+# based on this "magic" is really bad. I hope no actual audio player
+# does "verification" this way. The signature in file itself does only
+# take FFFA (see, that 1 is not required..) and says that this is _so_
+# unreliable that they actually parse the bitrate to be at least a bit
+# sure about it. See https://github.com/file/file/blob/c5c484a1867e0eaaece9a7ecde5b1317f2be5841/magic/Magdir/animation#L414
+0 string \xFF\xFB .mp3
+!:mime audio/mpeg
 
 # ogg
 0 string OggS .ogg
