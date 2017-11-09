@@ -58,6 +58,11 @@ int main (int argc, char** argv)
     std::string blob (argv[arg]);
     std::string index (blob + ".index");
     FILE* f (fopen (index.c_str(), "rb"));
+    if (!f)
+    {
+      std::cerr << "failed opening " << index << " (archive index)\n";
+      continue;
+    }
     fseek (f, 0, SEEK_END);
     std::vector<index_block> data (ftell (f) / sizeof (index_block));
     fseek (f, 0, SEEK_SET);
@@ -65,6 +70,11 @@ int main (int argc, char** argv)
     fclose (f);
 
     FILE* b (fopen (blob.c_str(), "rb"));
+    if (!b)
+    {
+      std::cerr << "failed opening " << blob << " (archive)\n";
+      continue;
+    }
 
     for (auto& block : data)
     {
@@ -84,6 +94,11 @@ int main (int argc, char** argv)
 #endif
 
             FILE* o (fopen (entry.hash_as_str().c_str(), "wb"));
+            if (!o)
+            {
+              std::cerr << "failed opening " << entry.hash_as_str() << " (entry)\n";
+              continue;
+            }
             fwrite (out.data(), out.size(), 1, o);
             fclose (o);
           }
