@@ -71,7 +71,7 @@ std::vector<char> decode_blte (char const* ptr, size_t size)
     switch (*ptr)
     {
     case 'N':
-      output.insert (output.end(), ptr + 1, ptr + 1 + chunk.uncompressed);
+      output.insert (output.end(), ptr + 1, ptr + 1 + chunk.compressed);
       break;
     case 'E':
       {
